@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casual Style Store — Демо-магазин</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, sans-serif; }
+        body { background-color: #f5f5f7; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 40px 20px; }
+        .shop-header { width: 100%; max-width: 950px; margin-bottom: 24px; text-align: center; }
+        .shop-title { font-size: 24px; font-weight: 700; color: #1d1d1f; margin-bottom: 16px; }
+        .product-nav { display: flex; justify-content: center; gap: 12px; background: #fff; padding: 8px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); display: inline-flex; }
+        .nav-btn { background: none; border: none; padding: 10px 24px; font-size: 14px; font-weight: 600; color: #86868b; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+        .nav-btn:hover { color: #1d1d1f; background: #f5f5f7; }
+        .nav-btn.active { color: #fff; background: #1d1d1f; }
+        .product-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 25px rgba(0,0,0,0.05); display: flex; max-width: 950px; width: 100%; overflow: hidden; }
+        .product-left-col { flex: 1; padding: 40px; border-right: 1px solid #f0f0f2; display: flex; flex-direction: column; gap: 24px; }
+        .image-wrapper { background: #fbfbfd; height: 420px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid #f0f0f2; overflow: hidden; }
+        .image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .description-block h3 { font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .description-text { color: #515154; font-size: 14px; line-height: 1.6; }
+        .product-right-col { flex: 1; padding: 40px; display: flex; flex-direction: column; }
+        .category { text-transform: uppercase; font-size: 11px; letter-spacing: 1px; color: #86868b; margin-bottom: 8px; font-weight: 600; }
+        .title { font-size: 26px; font-weight: 600; margin-bottom: 12px; line-height: 1.2; color: #1d1d1f; }
+        .price { font-size: 22px; font-weight: 700; color: #1d1d1f; margin-bottom: 24px; }
+        .size-selection-zone { margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px; }
+        .size-zone-title { font-size: 13px; font-weight: 600; color: #1d1d1f; text-transform: uppercase; letter-spacing: 0.5px; }
+        .widget-visible { background: #ffffff; border-radius: 12px; width: 100%; }
+        .classic-table-container { text-align: left; margin-top: 4px; }
+        .classic-table-link { font-size: 13px; color: #86868b; text-decoration: underline; cursor: pointer; transition: color 0.2s; }
+        .classic-table-link:hover { color: #0071e3; }
+        .classic-table-modal { display: none; background: #f5f5f7; padding: 16px; border-radius: 8px; border: 1px solid #d2d2d7; margin-top: 8px; }
+        .classic-table-modal table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .classic-table-modal th, .classic-table-modal td { padding: 8px; text-align: center; border-bottom: 1px solid #d2d2d7; }
+        .classic-table-modal th { font-weight: 600; background: #e8e8ed; }
+        .btn-buy { background: #1d1d1f; color: #fff; border: none; padding: 16px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.2s; width: 100%; margin-top: auto; }
+        .btn-buy:hover { background: #000; }
+        @media (max-width: 768px) {
+            .product-card { flex-direction: column; }
+            .product-left-col { border-right: none; border-bottom: 1px solid #f0f0f2; padding: 24px; }
+            .product-right-col { padding: 24px; }
+            .image-wrapper { height: 320px; }
+            .btn-buy { margin-top: 20px; }
+            .product-nav { width: 100%; justify-content: space-between; }
+            .nav-btn { padding: 10px 12px; font-size: 13px; flex: 1; }
+        }
+        .product-title-block {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 4px;
+        }
+            .available-sizes-zone {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.size-chips-container {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.size-chip {
+    border: 1px solid #d2d2d7;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1f;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s;
+    min-width: 48px;
+    text-align: center;
+}
+
+.size-chip:hover {
+    border-color: #1d1d1f;
+    background: #f5f5f7;
+}
+
+/* Стиль для отсутствующего размера */
+.size-chip.disabled {
+    border-color: #e9e9eb;
+    color: #d2d2d7;
+    background: #fbfbfd;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+.size-chip.active {
+    background: #1d1d1f;
+    border-color: #1d1d1f;
+    color: #fff;
+}
+    </style>
+</head>
+<body>
+
+    <!-- Шапка магазина и навигация -->
+    <div class="shop-header">
+        <div class="shop-title">Casual Store & Co</div>
+        <div class="product-nav">
+            <button class="nav-btn active" onclick="switchProduct('jacket', this)"> Jacket</button>
+            <button class="nav-btn" onclick="switchProduct('jeans', this)"> Jeans</button>
+            <button class="nav-btn" onclick="switchProduct('dress', this)"> Dress</button>
+        </div>
+    </div>
+
+    <!-- Главный контейнер карточки товара -->
+        <!-- Главный контейнер карточки товара -->
+    <div class="product-card">
+        
+        <!-- ЛЕВАЯ КОЛОНКА (Теперь с заголовком и ценой) -->
+        <div class="product-left-col">
+            <div class="product-title-block">
+                <div id="prod-category" class="category">Мужская одежда / Куртки</div>
+                <h1 id="prod-title" class="title">Повседневная куртка-бомбер</h1>
+                <div id="prod-price" class="price">5 990 ₽</div>
+            </div>
+
+            <div class="image-wrapper">
+                <img id="prod-img" src="https://unsplash.com" alt="Товар">
+            </div> 
+            
+            <div class="description-block">
+                <h3>Описание товара</h3>
+                <p id="prod-desc" class="description-text">Стильный бомбер из водоотталкивающей ткани. Идеально подходит для весенней и осенней погоды. Свободный крой не сковывает движения. Оснащен надежной фурнитурой и удобными боковыми карманами.</p>
+            </div>
+
+            <div class="classic-table-container">
+                <span class="classic-table-link" onclick="toggleClassicTable()">Посмотреть стандартную таблицу размеров</span>
+                
+                <div id="classic-size-table" class="classic-table-modal">
+                    <table id="prod-table">
+                        <thead>
+                            <tr><th>Размер</th><th>Обхват груди (см)</th><th>Рост (см)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>S (46)</td><td>90-94</td><td>170-176</td></tr>
+                            <tr><td>M (48)</td><td>95-99</td><td>174-180</td></tr>
+                            <tr><td>L (50)</td><td>100-104</td><td>178-184</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ПРАВАЯ КОЛОНКА (Только виджет и кнопка действия) -->
+        <div class="product-right-col">
+            <!-- Блок размеров в наличии -->
+            <div class="available-sizes-zone">
+                <div class="size-zone-title">Доступные размеры:</div>
+                <div class="size-chips-container" id="prod-chips">
+                    <div class="size-chip">S</div>
+                    <div class="size-chip">M</div>
+                    <div class="size-chip">L</div>
+                    <div class="size-chip disabled">XL</div>
+                </div>
+            </div>
+            <!-- Блок вашего виджета -->
+            <div class="size-selection-zone">
+                <div class="size-zone-title">Умный подбор размера:</div>
+                <div id="widget-wrapper" class="widget-visible">
+                    <size-calculator-widget api-key="e0fa161eab844f75948ab5a1a3ec1890" color="#4bbae2"></size-calculator-widget>
+                </div>
+            </div>
+
+            <button class="btn-buy" onclick="alert('Успешно добавлен в корзину!')">Добавить в корзину</button>
+        </div>
+
+    </div>
+
+        <!-- ЛОГИКА ДЛЯ ПЕРЕКЛЮЧЕНИЯ ТОВАРОВ И ТАБЛИЦ -->
+    <script>
+        const jacketTable = `<thead><tr><th>Размер</th><th>Обхват груди (см)</th><th>Рост (см)</th></tr></thead>` +
+            `<tbody><tr><td>S (46)</td><td>90-94</td><td>170-176</td></tr>` +
+            `<tr><td>M (48)</td><td>95-99</td><td>174-180</td></tr>` +
+            `<tr><td>L (50)</td><td>100-104</td><td>178-184</td></tr></tbody>`;
+
+        const jeansTable = `<thead><tr><th>Размер</th><th>Обхват талии (см)</th><th>Обхват бедер (см)</th></tr></thead>` +
+            `<tbody><tr><td>30/32</td><td>76-78</td><td>96-98</td></tr>` +
+            `<tr><td>32/32</td><td>81-83</td><td>100-103</td></tr>` +
+            `<tr><td>34/32</td><td>86-88</td><td>105-108</td></tr></tbody>`;
+
+        const dressTable = `<thead><tr><th>Размер</th><th>Обхват груди (см)</th><th>Обхват бедер (см)</th></tr></thead>` +
+            `<tbody><tr><td>XS (42)</td><td>82-85</td><td>90-93</td></tr>` +
+            `<tr><td>S (44)</td><td>86-89</td><td>94-97</td></tr>` +
+            `<tr><td>M (46)</td><td>90-93</td><td>98-101</td></tr></tbody>`;
+
+        const products = {
+            jacket: {
+                category: "Мужская одежда / Куртки",
+                title: "Повседневная куртка-бомбер",
+                price: "5 990 ₽",
+                img: "https://unsplash.com",
+                desc: "Стильный бомбер из водоотталкивающей ткани. Идеально подходит для весенней и осенней погоды. Свободный крой не сковывает движения. Оснащен надежной фурнитурой и удобными боковыми карманами.",
+                table: jacketTable,
+                chips: '<div class="size-chip" onclick="selectChip(this)">S</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">M</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">L</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">XL</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">XXL</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">3XL</div>'
+            },
+            jeans: {
+                category: "Мужская одежда / Джинсы",
+                title: "Джинсы Regular Fit",
+                price: "3 490 ₽",
+                img: "jeans.jpg",
+                desc: "Классические мужские джинсы прямого кроя из плотного качественного денима. Слегка эластичный материал обеспечивает идеальную посадку по фигуре и комфорт при повседневной носке.",
+                table: jeansTable,
+                chips: '<div class="size-chip" onclick="selectChip(this)">30</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">32</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">34</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">36</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">38</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">40</div>'
+            },
+            dress: {
+                category: "Женская одежда / Платья",
+                title: "Летнее платье миди",
+                price: "4 200 ₽",
+                img: "https://unsplash.com",
+                desc: "Легкое и воздушное повседневное платье из натуральной дышащей ткани. Приталенный силуэт и длина миди делают его универсальным выбором как для офиса, так и для вечерних прогулок.",
+                table: dressTable,
+                chips: '<div class="size-chip" onclick="selectChip(this)">XS</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">S</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">M</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">L</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">XL</div>' +
+                       '<div class="size-chip" onclick="selectChip(this)">XXL</div>'
+            }
+        };
+
+        function switchProduct(prodKey, buttonElement) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+
+            const data = products[prodKey];
+            document.getElementById('prod-category').innerText = data.category;
+            document.getElementById('prod-title').innerText = data.title;
+            document.getElementById('prod-price').innerText = data.price;
+            document.getElementById('prod-img').src = data.img;
+            document.getElementById('prod-desc').innerText = data.desc;
+            document.getElementById('prod-table').innerHTML = data.table;
+
+            document.getElementById('classic-size-table').style.display = 'none';
+            document.getElementById('prod-chips').innerHTML = products[prodKey].chips;
+        }
+
+        function toggleClassicTable() {
+            const table = document.getElementById('classic-size-table');
+            if (table.style.display === 'block') {
+                table.style.display = 'none';
+            } else {
+                table.style.display = 'block';
+                table.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        function selectChip(element) {
+            // Ищем все плитки размеров внутри контейнера и убираем у них класс active
+            const parent = element.parentElement;
+            parent.querySelectorAll('.size-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            // Добавляем класс active для плитки, на которую кликнули
+            element.classList.add('active');
+        }
+    </script>
+
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТА ВАШЕГО СЕРВИСА -->
+    <script src="https://size-master.asurpos.ru/js/main-app-service.js" async></script>
+
+</body>
+</html>
+
